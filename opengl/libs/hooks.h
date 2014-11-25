@@ -33,7 +33,7 @@
 #include <GLES3/gl31.h>
 
 // set to 1 for debugging
-#define USE_SLOW_BINDING    0
+#define USE_SLOW_BINDING    1
 
 #undef NELEM
 #define NELEM(x)            (sizeof(x)/sizeof(*(x)))
@@ -75,16 +75,10 @@ struct gl_hooks_t {
 
 EGLAPI void setGlThreadSpecific(gl_hooks_t const *value);
 
-// We have a dedicated TLS slot in bionic
-inline gl_hooks_t const * volatile * get_tls_hooks() {
-    volatile void *tls_base = __get_tls();
-    gl_hooks_t const * volatile * tls_hooks =
-            reinterpret_cast<gl_hooks_t const * volatile *>(tls_base);
-    return tls_hooks;
-}
+extern "C" gl_hooks_t const **__get_tls_hooks(); 
 
 inline EGLAPI gl_hooks_t const* getGlThreadSpecific() {
-    gl_hooks_t const * volatile * tls_hooks = get_tls_hooks();
+    gl_hooks_t const ** tls_hooks = __get_tls_hooks();
     gl_hooks_t const* hooks = tls_hooks[TLS_SLOT_OPENGL_API];
     return hooks;
 }
