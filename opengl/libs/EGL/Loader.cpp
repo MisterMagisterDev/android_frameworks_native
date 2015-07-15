@@ -192,9 +192,9 @@ void* Loader::open(egl_connection_t* cnx)
     cnx->libGles2 = load_wrapper("/system/lib64/libGLESv2.so");
     cnx->libGles1 = load_wrapper("/system/lib64/libGLESv1_CM.so");
 #else
-    cnx->libEgl   = load_wrapper("/system/lib/libEGL.so");
-    cnx->libGles2 = load_wrapper("/system/lib/libGLESv2.so");
-    cnx->libGles1 = load_wrapper("/system/lib/libGLESv1_CM.so");
+    cnx->libEgl   = load_wrapper("libEGL.so");
+    cnx->libGles2 = load_wrapper("libGLESv2.so");
+    cnx->libGles1 = load_wrapper("libGLESv1_CM.so");
 #endif
     LOG_ALWAYS_FATAL_IF(!cnx->libEgl,
             "couldn't load system EGL wrapper libraries");
