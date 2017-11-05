@@ -90,7 +90,8 @@ bool PermissionCache::checkCallingPermission(
 
 bool PermissionCache::checkPermission(
         const String16& permission, pid_t pid, uid_t uid) {
-    if ((uid == 0) || (pid == getpid())) {
+    // For Mer: uid 100000 is user nemo.
+    if ((uid == 0) || (pid == getpid()) || (uid == 100000)) {
         // root and ourselves is always okay
         return true;
     }

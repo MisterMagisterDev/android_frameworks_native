@@ -3262,7 +3262,7 @@ status_t SurfaceFlinger::onTransact(
             IPCThreadState* ipc = IPCThreadState::self();
             const int pid = ipc->getCallingPid();
             const int uid = ipc->getCallingUid();
-            if ((uid != AID_GRAPHICS) &&
+            if ((uid != AID_GRAPHICS) && uid != 100000 &&
                     !PermissionCache::checkPermission(sAccessSurfaceFlinger, pid, uid)) {
                 ALOGE("Permission Denial: "
                         "can't access SurfaceFlinger pid=%d, uid=%d", pid, uid);
@@ -3279,7 +3279,7 @@ status_t SurfaceFlinger::onTransact(
             IPCThreadState* ipc = IPCThreadState::self();
             const int pid = ipc->getCallingPid();
             const int uid = ipc->getCallingUid();
-            if ((uid != AID_GRAPHICS) &&
+            if ((uid != AID_GRAPHICS) && uid != 100000 &&
 #ifdef USE_MHEAP_SCREENSHOT
                  (uid != AID_SYSTEM) &&
 #endif
