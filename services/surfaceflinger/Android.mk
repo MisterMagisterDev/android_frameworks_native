@@ -123,6 +123,10 @@ ifeq ($(TARGET_HAVE_UI_BLUR),true)
     LOCAL_CFLAGS += -DUI_BLUR
 endif
 
+ifeq ($(strip $(BOARD_USE_MOTO_SF)), true)
+LOCAL_CPPFLAGS += -DUSE_MOTO_SF
+endif
+
 LOCAL_MODULE:= libsurfaceflinger
 
 include $(BUILD_SHARED_LIBRARY)

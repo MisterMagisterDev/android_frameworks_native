@@ -793,9 +793,13 @@ status_t SurfaceFlinger::postMessageSync(const sp<MessageBase>& msg,
 }
 
 void SurfaceFlinger::run() {
+#ifdef USE_MOTO_SF
+    waitForEvent();
+#else
     do {
         waitForEvent();
     } while (true);
+#endif
 }
 
 void SurfaceFlinger::enableHardwareVsync() {

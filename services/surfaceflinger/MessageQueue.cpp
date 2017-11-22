@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#ifdef USE_MOTO_SF
+const int NUM_SECONDS = 3;
+#include <time.h>
+#endif
 
 #include <stdint.h>
 #include <errno.h>
@@ -110,9 +114,28 @@ void MessageQueue::setEventThread(const sp<EventThread>& eventThread)
 }
 
 void MessageQueue::waitMessage() {
+
+#ifdef USE_MOTO_SF
+    clock_t start_time = clock();
+    clock_t this_time = clock();
+    long time_counter = 0;
+    bool do_loop = true;
+#endif
+
     do {
         IPCThreadState::self()->flushCommands();
         int32_t ret = mLooper->pollOnce(-1);
+
+#ifdef USE_MOTO_SF
+        clock_t this_time = clock();
+        time_counter += (long)(this_time - start_time);
+        ALOGI("MessageQueue::waitMessage time_counter = %ld", time_counter);
+        if(time_counter > (long)(NUM_SECONDS * CLOCKS_PER_SEC)) {
+            ALOGI("MessageQueue::waitMessage exit loop");
+            do_loop = false;
+        }
+#endif
+
         switch (ret) {
             case Looper::POLL_WAKE:
             case Looper::POLL_CALLBACK:
@@ -127,7 +150,11 @@ void MessageQueue::waitMessage() {
                 ALOGE("Looper::pollOnce() returned unknown status %d", ret);
                 continue;
         }
-    } while (true);
+#ifdef USE_MOTO_SF
+    } while (do_loop);
+#else
+    } while (true);    
+#endif
 }
 
 status_t MessageQueue::postMessage(
